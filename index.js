@@ -1,28 +1,49 @@
-var express = require('express');
+var mach = require('mach');
+var fs = require('fs');
+var path = require('path');
 var reactTools = require('react-tools');
 
-var app = express();
+var app = mach.stack();
 var port = process.env.PORT || 5000;
 
-app.use(express.bodyParser());
+app.use(mach.params);
+app.use(mach.gzip);
+app.use(mach.file, {
+  root: path.join(__dirname, 'public'),
+  index: true
+});
 
-app.post('/', function(req, res) {
-  var response = 'we fucked up';
-  var rawCode = req.body.code;
+app.post('/', function(request) {
+  var err;
   try {
-    response = reactTools.transform(rawCode);
+    var params = request.params;
+    var options = {};
+    var code;
+    if (params.file) {
+      // TODO: don't do anything sync dummy. need fs-promises library...
+      code = fs.readFileSync(params.file.path, 'utf8');
+    } else if (params.code) {
+      code = params.code;
+    } else {
+      throw new Error('Must provide a file or code string');
+    }
+    options.harmony = !!params.harmony;
+    options.sourceMap = !!params.sourceMap;
+
+    var transformedCode = reactTools.transform(code, options);
+    return {
+      headers: { 'Content-Type': 'application/javascript' },
+      content: transformedCode
+    };
   } catch (e) {
-    response = e;
+    err = e;
   }
-  res.send(response);
+
+  return {
+    status: 500,
+    content: err.toString()
+  };
+
 });
 
-app.get('/', function(req, res) {
-  res.send(
-    'More soon. Until then, just <code>POST</code> to ' +
-    '<code>jsx-tranformer.herokuapp.com</code> with <code>code</code> set to ' +
-    'your code you want transformed.'
-  );
-});
-
-app.listen(port);
+mach.serve(app, port);

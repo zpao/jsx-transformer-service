@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width">
+  <title>JSX Transformer Service</title>
+  <style>
+    body {
+      font-family: 'Helvetica', 'Arial', sans-serif;
+      font-size: 16px;
+    }
+    #container, pre {
+      max-width:600px;
+    }
+    #container {
+      margin: auto;
+      max-width: 600px;
+    }
+    .contribute {
+      color: #999;
+    }
+    pre, code {
+      background: #eee;
+      font-family: Menlo, Consolas, monospace;
+    }
+    pre {
+      padding: 10px;
+    }
+
+    /* iphones */
+    @media (max-width: 568px) {
+      body {
+        font-size: 14px;
+      }
+      pre {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h1>JSX Transformer Service</h1>
+    <p>
+      This is a service to transform JSX to JS, via <code>POST</code> requests.
+      Currently this simply uses the react-tools npm package.
+      This uses <strong>v0.10</strong> of that package.
+      There me be inconsistencies if you are using a different version of React.
+    </p>
+
+    <h2>Usage</h2>
+    <p>
+      There are 3 available params, <code>file</code>, <code>code</code>, and <code>harmony</code>.
+      <code>file</code> is the file that should be transformed.
+      <code>code</code> is the raw string of JSX (not to be used in conjunction with <code>file</code>).
+      <code>harmony</code> enables ES6 features of the transformer.
+    </p>
+
+    <p>
+      A <code>curl</code> request may look like this:
+    </p>
+    <pre><code>curl jsx-transformer.herokuapp.com \
+     -X POST
+     -F "file=@path/to/file" \
+     -F "harmony=true"</code></pre>
+
+
+    <p class="contribute">
+      If you are interested in extending this service, <a href="https://github.com/zpao/jsx-transformer-service">patches welcome!</a>
+    </p>
+
+  </div>
+</body>
+</html>
