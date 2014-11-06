@@ -9,7 +9,7 @@
   "author": "",
   "license": "BSD",
   "dependencies": {
-    "react-tools": "^0.10.0",
-    "mach": "^0.11.0"
+    "mach": "^0.12.0",
+    "react-tools": "^0.12.0"
   }
 }
